@@ -2,7 +2,7 @@ const taskContainer = document.querySelector(".Task_container");
 console.log(taskContainer);
 
 
-const globalStorage = [];
+let globalStorage = [];
 
 
 const newCard = ({
@@ -11,11 +11,12 @@ const newCard = ({
     taskTitle,
     taskType,
     taskDescription
-}) =>`<div class="col-md-6 col-lg-3" id=${id}>
+}) =>`<div class="col-md-6 col-lg-3 mb-3" id=${id}>
         <div class="card shadow" id="card">
           <div class="card-header d-flex justify-content-end gap-2">
             <button type="button" class="btn btn-outline-success"><i class="fa-solid fa-pencil"></i></button>
-            <button type="button" class="btn btn-outline-danger"><i class="fa-solid fa-trash-can"></i></button>
+            <button type="button" class="btn btn-outline-danger" id=${id} onclick="doDelete.apply(this,arguments)">
+            <i class="fa-solid fa-trash-can" id=${id} onclick="doDelete.apply(this,arguments)"></i></button>
           </div>
           <img src=${imageUrl} class="card-img-top" alt="...">
           <div class="card-body">
@@ -31,6 +32,10 @@ const newCard = ({
       </div>
     `
 
+const updateLocalStorage = (array) =>{
+  localStorage.setItem("tasky", JSON.stringify({ cards: array}));
+};
+
 const doFirst = () =>{
   const local_storage = localStorage.getItem("tasky");
   if(!local_storage) return;
@@ -42,6 +47,8 @@ const doFirst = () =>{
     taskContainer.insertAdjacentHTML("beforeend", createNewCard);
     globalStorage.push(card);
   });
+
+  
 };
 
 const saveChanges = () => {
@@ -57,5 +64,22 @@ const saveChanges = () => {
     const createNewCard = newCard(taskData);
     taskContainer.insertAdjacentHTML("beforeend", createNewCard);
     globalStorage.push(taskData);
-    localStorage.setItem("tasky", JSON.stringify({ cards: globalStorage}));
+    updateLocalStorage(globalStorage);
+};
+
+const doDelete = (event) => {
+  event = window.event;
+  const targetId = event.target.id;
+  const tagname = event.target.tagName;
+  globalStorage = globalStorage.filter((card) => card.id !== targetId);
+  
+  updateLocalStorage(globalStorage);
+  if(tagname === "BUTTON"){
+    return taskContainer.removeChild(
+      event.target.parentNode.parentNode.parentNode
+      );
+  }
+  return taskContainer.removeChild(
+    event.target.parentNode.parentNode.parentNode.parentNode
+    );
 };
