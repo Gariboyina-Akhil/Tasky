@@ -1,0 +1,20 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    font-family: 'Poppins', sans-serif;
+    background-color: #ebf2ff;
+}
+
+#card{
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#card:hover,#card:focus,#card:active{
+    box-shadow: 0 0 15px rgba(0, 0, 0, 1);
+    -webkit-transform: scale(1.03);
+    transform: scale(1.03);
+}
